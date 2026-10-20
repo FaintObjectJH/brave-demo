@@ -1,0 +1,1526 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Brave">
+<meta name="robots" content="noindex, nofollow">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Brave</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#fbf6f7">
+<style>
+/* Layout: one phone-width column; header, scrolling screen, actions pinned to the thumb zone, tab bar.
+   No web fonts and no third-party requests: system faces only (rounded on Apple devices). */
+:root {
+  --bg: #fbf6f7;
+  --surface: #ffffff;
+  --ink: #2b1b25;
+  --muted: #6e5a66;
+  --line: #eadde3;
+  --blush: #c93b63;
+  --blush-ink: #ffffff;
+  --blush-soft: #f9dde5;
+  --calm: #2a7a70;
+  --calm-soft: #d7eeea;
+  --sos: #b3261e;
+  --sos-soft: #fbe3e1;
+  --shadow: 0 1px 2px rgba(43, 27, 37, .06), 0 6px 20px rgba(43, 27, 37, .06);
+  --display: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --r: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17111a; --surface: #221a26; --ink: #f6ecf1; --muted: #b9a6b2; --line: #3a2e3f;
+    --blush: #ff7a9c; --blush-ink: #2a0f19; --blush-soft: #4a2433; --calm: #6fd1c2; --calm-soft: #163a36;
+    --sos: #ff8a80; --sos-soft: #4a1f1c; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17111a; --surface: #221a26; --ink: #f6ecf1; --muted: #b9a6b2; --line: #3a2e3f;
+  --blush: #ff7a9c; --blush-ink: #2a0f19; --blush-soft: #4a2433; --calm: #6fd1c2; --calm-soft: #163a36;
+  --sos: #ff8a80; --sos-soft: #4a1f1c; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.5 var(--body);
+  -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+* { box-sizing: border-box; }
+button, input, textarea { font: inherit; color: inherit; }
+a { color: var(--blush); font-weight: 600; }
+
+#app {
+  height: 100%; max-width: 520px; margin: 0 auto;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+
+/* Header */
+.top {
+  display: flex; align-items: center; gap: 10px;
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.brand { font: 700 20px/1 var(--display); letter-spacing: -.01em; flex: 1; }
+.brand span { color: var(--blush); }
+.chip-stat {
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.sos-btn {
+  min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0;
+  background: var(--sos-soft); color: var(--sos); font-weight: 800; font-size: 13px; letter-spacing: .06em;
+  cursor: pointer;
+}
+
+/* Screen */
+main {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 4px 0;
+  display: flex; flex-direction: column;
+}
+.screen { display: flex; flex-direction: column; gap: 16px; flex: 1; padding-bottom: 8px; }
+.screen > .grow { flex: 1; }
+
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 700 28px/1.15 var(--display); letter-spacing: -.015em; margin: 0; text-wrap: balance; }
+h2 { font: 700 20px/1.25 var(--display); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lede { font-size: 17px; color: var(--ink); }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+.card {
+  background: var(--surface); border-radius: var(--r); padding: 18px;
+  box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px;
+}
+.challenge-text { font: 600 22px/1.3 var(--display); letter-spacing: -.01em; text-wrap: pretty; }
+.rule {
+  border-radius: 14px; padding: 12px 14px; background: var(--blush-soft);
+  font-weight: 600; font-size: 15px;
+}
+.note { border-radius: 14px; padding: 12px 14px; background: var(--calm-soft); font-size: 15px; }
+.warn { border-radius: 14px; padding: 12px 14px; background: var(--sos-soft); font-size: 15px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+
+/* Actions pinned at the bottom of the screen, in thumb reach */
+.actions {
+  position: sticky; bottom: 0; margin-top: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  padding-block: 14px 12px;
+  background: linear-gradient(to bottom, transparent, var(--bg) 22%);
+}
+.btn {
+  min-height: 54px; width: 100%; border-radius: 16px; border: 0; cursor: pointer;
+  font: 700 17px/1.2 var(--body); padding: 0 18px;
+  background: var(--blush); color: var(--blush-ink);
+  transition: transform .08s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn.secondary { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.btn.ghost { background: transparent; color: var(--muted); min-height: 44px; font-weight: 600; }
+.btn.danger { background: var(--sos); color: var(--surface); }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; min-width: 0; }
+.linkbtn { background: none; border: 0; padding: 8px 0; color: var(--blush); font-weight: 700; cursor: pointer; text-align: left; }
+
+:focus-visible { outline: 3px solid var(--blush); outline-offset: 2px; }
+
+/* Forms */
+.q { display: flex; flex-direction: column; gap: 10px; }
+.q-label { font-weight: 600; }
+.choices { display: flex; flex-direction: column; gap: 8px; }
+.choices.inline { flex-direction: row; flex-wrap: wrap; }
+.choices.inline .choice { flex: 1 1 0; min-width: 0; justify-content: center; text-align: center; }
+.choice {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 10px 14px; border-radius: 14px;
+  background: var(--surface); border: 1.5px solid var(--line);
+  cursor: pointer; text-align: left; font-size: 15px; font-weight: 500;
+}
+.choice[aria-pressed="true"] { border-color: var(--blush); background: var(--blush-soft); font-weight: 700; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.scale.four { grid-template-columns: repeat(2, 1fr); }
+.scale .choice { justify-content: center; text-align: center; font-size: 13px; padding: 8px 4px; min-height: 52px; line-height: 1.2; }
+
+textarea {
+  width: 100%; min-height: 84px; resize: vertical; padding: 12px 14px; border-radius: 14px;
+  border: 1.5px solid var(--line); background: var(--surface); font-size: 16px; line-height: 1.4;
+}
+textarea:focus { border-color: var(--blush); outline: none; }
+
+/* The worry meter: 0 to 100, calm to blush */
+.meter { display: flex; flex-direction: column; gap: 6px; }
+.meter-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.meter-val { font: 800 30px/1 var(--display); color: var(--blush); font-variant-numeric: tabular-nums; }
+.meter-val.sm { font-size: 20px; }
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; margin: 0;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px; border-radius: 999px; background: linear-gradient(90deg, var(--calm), var(--blush));
+}
+input[type="range"]::-moz-range-track {
+  height: 10px; border-radius: 999px; background: linear-gradient(90deg, var(--calm), var(--blush));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 32px; height: 32px; margin-top: -11px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--ink); box-shadow: var(--shadow);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--surface); border: 3px solid var(--ink);
+}
+.meter-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+
+/* Theme list (questionnaire) */
+.theme-q { padding-block: 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.theme-q:last-child { border-bottom: 0; }
+
+/* Ladder */
+.ladder { display: flex; flex-direction: column; gap: 6px; }
+.rung {
+  display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line);
+}
+.rung.current { border-color: var(--blush); box-shadow: 0 0 0 2px var(--blush-soft); }
+.rung.locked { opacity: .55; }
+.rung-name { font-weight: 700; font-size: 14px; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); }
+.dot.done { background: var(--blush); border-color: var(--blush); }
+.dot.skip { background: var(--line); }
+.rung-tick { font-size: 13px; font-weight: 700; color: var(--calm); }
+
+/* Gap visual */
+.gap { display: flex; flex-direction: column; gap: 8px; }
+.bar { height: 14px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--blush); border-radius: 999px; }
+.bar.calm > i { background: var(--calm); }
+.gap-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: var(--shadow); }
+.stat b { display: block; font: 800 24px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+.badges { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.badge { border-radius: 14px; padding: 12px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.badge b { font-family: var(--display); }
+.badge.got { border-color: var(--blush); background: var(--blush-soft); }
+.badge:not(.got) { opacity: .5; }
+
+.hist { display: flex; flex-direction: column; }
+.hist-item { padding-block: 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.hist-item:last-child { border-bottom: 0; }
+.pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.pill.no { background: var(--calm-soft); color: var(--calm); }
+.pill.partly, .pill.yes { background: var(--blush-soft); color: var(--blush); }
+.pill.skipped { background: var(--line); color: var(--muted); }
+
+.chart { width: 100%; height: 120px; display: block; }
+
+.facts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; counter-reset: f; }
+.facts li { background: var(--surface); border-radius: 14px; padding: 12px 14px 12px 46px; position: relative; box-shadow: var(--shadow); counter-increment: f; }
+.facts li::before { content: counter(f); position: absolute; left: 14px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--blush-soft); color: var(--blush); font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+
+.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+
+.copybox { display: flex; gap: 8px; align-items: center; }
+.copybox code { flex: 1; font: 700 18px/1.2 var(--body); user-select: all; -webkit-user-select: all; font-variant-numeric: tabular-nums; }
+.copy { min-height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; cursor: pointer; }
+
+.share-text { width: 100%; min-height: 260px; font-size: 14px; line-height: 1.45; }
+
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.setting-row:last-child { border-bottom: 0; }
+.setting-row > div { min-width: 0; }
+.toggle { width: 52px; height: 32px; border-radius: 999px; border: 0; background: var(--line); position: relative; cursor: pointer; flex: none; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); transition: left .15s; }
+.toggle[aria-pressed="true"] { background: var(--blush); }
+.toggle[aria-pressed="true"]::after { left: 23px; }
+
+.celebrate { text-align: center; align-items: center; padding-block: 24px; }
+.medal {
+  width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--blush-soft); color: var(--blush); font: 800 30px/1 var(--display);
+  border: 4px solid var(--blush);
+}
+
+/* Tab bar */
+.tabs {
+  display: flex; border-top: 1px solid var(--line); background: var(--surface);
+  padding-left: max(8px, env(safe-area-inset-left, 0px));
+  padding-right: max(8px, env(safe-area-inset-right, 0px));
+}
+.tab {
+  flex: 1; min-height: 56px; border: 0; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+}
+.tab svg { width: 22px; height: 22px; }
+.tab[aria-current="page"] { color: var(--blush); }
+
+/* SOS sheet */
+.sheet-wrap { position: fixed; inset: 0; background: rgba(23, 17, 26, .5); display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+.sheet {
+  width: 100%; max-width: 520px; max-height: 90%; overflow-y: auto;
+  background: var(--bg); border-radius: 22px 22px 0 0;
+  padding-block: 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 14px;
+}
+.banner { font-size: 13px; padding: 8px 12px; border-radius: 12px; background: var(--sos-soft); color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Slides: one question each */
+.prog { display: flex; flex-direction: column; gap: 8px; }
+.prog-row { display: flex; justify-content: space-between; align-items: center; min-height: 32px; }
+.back { background: none; border: 0; padding: 6px 0; color: var(--blush); font-weight: 700; font-size: 15px; cursor: pointer; }
+.bar.thin { height: 6px; }
+h2.question { font: 700 24px/1.25 var(--display); letter-spacing: -.01em; }
+.actions .choices .choice { min-height: 56px; font-size: 16px; justify-content: center; text-align: center; }
+
+/* Speak first: a big button that opens the keyboard so its microphone key is one tap away */
+.speak-btn {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 68px;
+  padding: 12px 16px; border-radius: 16px; border: 1.5px solid var(--blush);
+  background: var(--blush-soft); color: var(--ink); text-align: left; cursor: pointer;
+}
+.speak-btn svg { width: 30px; height: 30px; flex: none; color: var(--blush); }
+.speak-btn > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.speak-btn b { font-size: 17px; }
+.speak-btn .small { color: var(--muted); line-height: 1.35; }
+
+/* ---- Fit-the-screen layout: slides never scroll. Sizes scale with the screen height (dvh).
+   Each rule gives a plain fallback first for older phones without dvh support. ---- */
+html, body { overflow: hidden; }
+.top { padding-block: 6px; min-height: 48px; }
+.brand { font-size: 19px; }
+.sos-btn { min-height: 32px; }
+main { padding-block: 2px 0; }
+.screen { gap: 10px; gap: clamp(8px, 1.6dvh, 14px); padding-bottom: 0; }
+.actions {
+  position: static; background: none; margin-top: auto;
+  padding-block: 10px 12px; padding-block: clamp(8px, 1.6dvh, 14px) clamp(10px, 2dvh, 16px);
+  gap: 8px; gap: clamp(6px, 1.1dvh, 10px);
+}
+h1 { font-size: 24px; font-size: clamp(21px, 3.4dvh, 28px); }
+h1.hero { font-size: 34px; font-size: clamp(30px, 6dvh, 44px); line-height: 1.05; }
+h2.question { font-size: 21px; font-size: clamp(18px, 2.9dvh, 24px); line-height: 1.25; }
+.lede { font-size: 16px; font-size: clamp(15px, 2.2dvh, 17px); }
+.challenge-text { font-size: 19px; font-size: clamp(17px, 2.7dvh, 22px); }
+.card { padding: 14px; padding: clamp(10px, 1.8dvh, 18px); gap: 8px; }
+.btn { min-height: 50px; min-height: clamp(44px, 6.4dvh, 54px); }
+.btn.ghost { min-height: 40px; }
+.actions .choices { gap: 8px; gap: clamp(6px, 1dvh, 8px); }
+.actions .choices .choice {
+  min-height: 48px; min-height: clamp(40px, 6.2dvh, 56px);
+  padding: 6px 12px; font-size: 16px; font-size: clamp(15px, 2.1dvh, 16px);
+}
+.prog { gap: 6px; }
+.prog-row { display: flex; align-items: center; gap: 10px; min-height: 32px; }
+.prog-row .eyebrow { flex: 1; }
+.back {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font-size: 22px; line-height: 1;
+  display: grid; place-items: center; padding: 0 0 3px;
+}
+.speak-btn { min-height: 52px; min-height: clamp(48px, 7dvh, 64px); padding: 8px 14px; }
+textarea { min-height: 56px; min-height: clamp(52px, 9dvh, 84px); }
+.celebrate {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 10px; gap: clamp(6px, 1.4dvh, 12px); padding-block: 12px; padding-block: clamp(4px, 2dvh, 24px);
+}
+.medal { width: 72px; height: 72px; width: clamp(56px, 10dvh, 96px); height: clamp(56px, 10dvh, 96px); font-size: 26px; font-size: clamp(22px, 4dvh, 30px); }
+.notes, .mini { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; gap: clamp(6px, 1.2dvh, 10px); font-size: 15px; }
+.help-list { display: flex; flex-direction: column; gap: 6px; }
+.help-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; background: var(--surface); border-radius: 12px; padding: 8px 10px; }
+.help-row > span { min-width: 0; }
+.help-row code { font: 700 17px/1 var(--body); font-variant-numeric: tabular-nums; }
+.help-row a { color: inherit; text-decoration: none; font-weight: 700; }
+.help-row .copy { min-height: 34px; padding: 0 10px; }
+.stat { padding: 10px; }
+.stat b { font-size: 22px; font-size: clamp(18px, 3dvh, 24px); }
+.rule { padding: 10px 12px; font-size: 14px; }
+.rung { padding: 8px 12px; }
+.sheet { gap: 10px; }
+
+/* Back and forward, top left on every screen */
+.navbtns { display: flex; gap: 6px; }
+.nav {
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); display: grid; place-items: center; padding: 0; cursor: pointer;
+}
+.nav svg { width: 18px; height: 18px; }
+.nav[disabled] { opacity: .3; cursor: default; }
+.top .brand { flex: 1; }
+
+</style>
+<div id="app"></div>
+<script>
+/* Brave challenge bank, version 1 (Sun 18th October 2026).
+   100 challenges: 10 bands (levels) x 10 feared-outcome themes, one per theme per band.
+   Rules every item follows (from the Challenge Sources page in Notion):
+   - harm nobody, minor social rule-breaks only, always legal
+   - no deceiving workers, no filming, no touching, nobody who can't walk away
+   - the goal is a behaviour, never a feeling
+   Band 1 items take under a minute and involve no strangers.
+   Sources for the harder bands: Fang, Sawyer, Asnaani and Hofmann 2013 (social mishap
+   exposures), Dryden and Ellis 2001 (shame-attacking), Craske et al 2014, Jia Jiang's
+   100 Days of Rejection. Bands 0 to 2 are original. */
+
+window.BLUSH_BANK = (function () {
+  var themes = [
+    { key: 'looked', label: 'Being looked at', fear: 'people would stare at you', worry: 'People will stare at me and think I’m weird.' },
+    { key: 'incompetent', label: 'Looking incompetent', fear: 'people would think you’re stupid', worry: 'They’ll think I’m stupid.' },
+    { key: 'anxious', label: 'Looking nervous', fear: 'people would notice you’re nervous', worry: 'They’ll see I’m nervous and think less of me.' },
+    { key: 'refused', label: 'Being refused', fear: 'someone would say no to you', worry: 'They’ll say no and I’ll feel stupid for asking.' },
+    { key: 'laughed', label: 'Being laughed at', fear: 'someone would laugh at you', worry: 'Someone will laugh at me.' },
+    { key: 'inconvenience', label: 'Being a bother', fear: 'someone would be annoyed with you', worry: 'They’ll be annoyed with me.' },
+    { key: 'convention', label: 'Breaking a convention', fear: 'people would think you’re weird or rude', worry: 'People will think I’m strange or rude.' },
+    { key: 'help', label: 'Asking for help', fear: 'people would think you’re useless', worry: 'They’ll think I’m useless or needy.' },
+    { key: 'flaw', label: 'Showing a flaw', fear: 'people would think less of you', worry: 'They’ll think less of me.' },
+    { key: 'rejected', label: 'Being turned down', fear: 'someone would turn you down', worry: 'They’ll turn me down and it’ll be awkward.' }
+  ];
+
+  var settings = [
+    { key: 'street', label: 'Streets and parks' },
+    { key: 'shop', label: 'Shops' },
+    { key: 'cafe', label: 'Cafés, pubs or restaurants' },
+    { key: 'transport', label: 'Buses, trains or the Tube' },
+    { key: 'work', label: 'Work or college' },
+    { key: 'phone', label: 'Messages and calls' }
+  ];
+
+  var OUT = ['street', 'shop', 'cafe', 'transport', 'work'];
+
+  var items = [];
+  function add(band, theme, where, strangers, text, why) {
+    items.push({ id: 'b' + band + '-' + theme, band: band, theme: theme, settings: where, strangers: strangers, text: text, why: why });
+  }
+
+  /* Band 1: under a minute, nobody much notices, no strangers */
+  add(1, 'looked', ['any'], false, 'Wear odd socks today, ones that clearly don’t match.', 'Nobody is affected. Most people won’t even notice.');
+  add(1, 'incompetent', ['phone'], false, 'Send a friend a message with an obvious typo in it. Don’t send a correction.', 'A typo costs your friend nothing. See if they even mention it.');
+  add(1, 'anxious', ['any'], false, 'In your next conversation, pause for three full seconds before you answer one question.', 'A pause takes nothing from the other person.');
+  add(1, 'refused', ['any'], false, 'Ask someone you live or work with to pass you something you could reach yourself.', 'It’s a tiny favour from someone who knows you, and they can say no.');
+  add(1, 'laughed', ['phone'], false, 'Send a friend your worst joke or pun. No “sorry” and no explaining it.', 'The worst that happens is an eye-roll.');
+  add(1, 'inconvenience', ['any'], false, 'Next time someone is in your way at home or work, ask them to move instead of squeezing past.', 'Asking someone to step aside is normal and takes them two seconds.');
+  add(1, 'convention', ['any'], false, 'Eat a snack with your other hand, somewhere someone can see you.', 'It’s harmless and only you will feel odd.');
+  add(1, 'help', ['any'], false, 'Ask a friend or colleague something you could have looked up yourself.', 'Most people like being asked. It costs them a few seconds.');
+  add(1, 'flaw', ['any'], false, 'Tell one person about something small you’re bad at, like parking, spelling or remembering names.', 'Small flaws are common. You’re only sharing something true.');
+  add(1, 'rejected', ['phone'], false, 'Message a friend to suggest a specific plan on a specific day, like a walk on Saturday.', 'They can say no without any awkwardness.');
+
+  /* Band 2 */
+  add(2, 'looked', OUT, false, 'Wear a bright colour you’d normally avoid when you go out today.', 'Your clothes affect nobody else.');
+  add(2, 'incompetent', ['shop'], true, 'Ask a shop assistant a question you don’t know the answer to, even if it feels obvious.', 'Answering questions is part of their job.');
+  add(2, 'anxious', ['any'], false, 'Before something small, tell a friend or colleague: “I’m a bit nervous about this.”', 'Saying how you feel asks nothing of anyone.');
+  add(2, 'refused', ['cafe', 'shop'], true, 'Ask a café or shop if they have something they probably don’t, like a flavour that isn’t on the menu.', 'A polite question is easy to answer, yes or no.');
+  add(2, 'laughed', ['street', 'transport', 'cafe'], false, 'Laugh out loud at something on your phone in a public place, without covering your mouth.', 'Laughing is normal. Nobody has to respond.');
+  add(2, 'inconvenience', ['shop', 'cafe'], true, 'Pay for something small with coins, counting them out at your own pace.', 'Paying with coins is normal. It takes a few extra seconds.');
+  add(2, 'convention', ['street', 'work'], true, 'Say hello first to someone you see often but never speak to, like a neighbour or a security guard.', 'A hello is easy to return or ignore.');
+  add(2, 'help', ['street'], true, 'Ask a stranger for directions to somewhere you’re actually going.', 'Giving directions takes a few seconds, and people usually like helping.');
+  add(2, 'flaw', ['any'], false, 'Next time you forget something (a name, a detail), say so instead of covering it up.', 'Everyone forgets things. Saying so is honest.');
+  add(2, 'rejected', ['work'], false, 'Invite someone at work or college to join you for lunch or a break.', 'It’s a friendly offer they can easily say no to.');
+
+  /* Band 3 */
+  add(3, 'looked', ['street'], false, 'Walk at half speed for two minutes on a busy pavement. Keep to one side.', 'You’re not in anyone’s way if you keep to the side.');
+  add(3, 'incompetent', ['cafe'], true, 'Order something with a name you’re not sure how to say, without pointing or checking first.', 'Staff hear every pronunciation going. It’s their job to understand.');
+  add(3, 'anxious', ['cafe', 'shop'], true, 'When you order, say “Give me a second, I’m a bit nervous”, then take your time.', 'It takes a few seconds and asks nothing of them.');
+  add(3, 'refused', ['shop'], true, 'Ask politely, once, if there’s any discount on something full price.', 'Staff are asked this all the time. A no is normal.');
+  add(3, 'laughed', OUT, false, 'Wear a silly hat or headband for an hour while you’re out.', 'It’s your head. Nobody else is affected.');
+  add(3, 'inconvenience', ['cafe'], true, 'Ask for your drink to be changed (hotter, more milk) because you’d like it that way.', 'Getting your drink right is part of their job.');
+  add(3, 'convention', ['shop', 'work', 'transport'], false, 'Face the “wrong” way in a lift or a queue for 20 seconds.', 'It’s odd but harmless, and nobody is blocked.');
+  add(3, 'help', ['shop'], true, 'Ask a shop worker to help you find a size or reach something on a high shelf.', 'Helping customers is part of their job.');
+  add(3, 'flaw', ['any'], false, 'Admit in a conversation that you haven’t heard of something everyone else seems to know.', 'Nobody knows everything. It’s honest and harmless.');
+  add(3, 'rejected', ['any'], false, 'Share an opinion that’s different from the group’s, once. Don’t soften it or take it back.', 'Disagreeing politely is normal. They can disagree back.');
+
+  /* Band 4 */
+  add(4, 'looked', ['street'], false, 'Walk backwards for 20 steps somewhere with a few people around. Check behind you first.', 'It’s odd but harmless if you look where you’re going.');
+  add(4, 'incompetent', ['street', 'shop'], false, 'Drop your keys or a glove in a shop or street, then pick it up slowly. No joke, no comment.', 'Dropping things happens to everyone. Nobody else is involved.');
+  add(4, 'anxious', ['street', 'cafe', 'shop'], true, 'Start a short chat with a stranger by saying “This might be a bit random…”', 'They can reply or move on. A friendly line costs nothing.');
+  add(4, 'refused', ['cafe'], true, 'Ask a café for a glass of tap water without buying anything.', 'They can say yes or no. Either answer is fine.');
+  add(4, 'laughed', ['street', 'shop'], false, 'Sing one line of a song out loud in a shop or on the street, at normal volume.', 'It lasts a few seconds and nobody has to react.');
+  add(4, 'inconvenience', ['shop'], true, 'Return something you don’t want to a shop, within their returns policy.', 'Returns are a normal part of shopping.');
+  add(4, 'convention', OUT, false, 'Wear your jumper or top inside out for an hour while you’re out.', 'Only you are affected. Most people won’t notice.');
+  add(4, 'help', ['street'], true, 'Ask a stranger to take a photo of you on your phone somewhere ordinary, not a landmark.', 'They can say no. You’re only asking for a moment of their time.');
+  add(4, 'flaw', ['any'], false, 'Tell a friend about a time you embarrassed yourself, without turning it into a joke.', 'Sharing a true story with a friend is safe.');
+  add(4, 'rejected', ['street'], true, 'Tell a stranger you like something they chose, like their bag or their dog, then walk on.', 'A short, friendly comment with no follow-up asks nothing of them.');
+
+  /* Band 5 */
+  add(5, 'looked', ['cafe', 'street'], false, 'Sit in a busy café or public place for five minutes doing nothing. No phone, no book.', 'Sitting quietly affects nobody.');
+  add(5, 'incompetent', ['shop'], true, 'Ask a shop worker to show you how to use something simple, like the self-checkout.', 'Showing customers is part of their job.');
+  add(5, 'anxious', ['any'], true, 'Tell someone you’ve just met that you find small talk hard.', 'It’s honest, and lots of people feel the same.');
+  add(5, 'refused', ['shop', 'cafe'], true, 'Ask a shop or café if you can use their toilet without buying anything.', 'They can say no. It’s a common request.');
+  add(5, 'laughed', ['cafe', 'shop'], true, 'Tell a cashier or barista a cheesy joke while you pay.', 'It’s a few seconds of their day. They can smile or not.');
+  add(5, 'inconvenience', ['shop'], true, 'When you only have one or two things, ask the person ahead of you in the queue if you can go first.', 'They can say no. It’s a normal, polite request.');
+  add(5, 'convention', ['shop', 'work'], false, 'Open an umbrella indoors in a doorway or hallway for ten seconds. Keep it clear of people.', 'It’s harmless if nobody is within reach.');
+  add(5, 'help', ['street', 'transport', 'shop'], true, 'Ask a stranger to help you read something small, like a sign, a label or a timetable.', 'It takes a moment and they can say no.');
+  add(5, 'flaw', ['phone'], false, 'Post something unpolished where friends will see it, like a blurry photo or a half-finished drawing.', 'Your friends see far worse every day.');
+  add(5, 'rejected', ['work'], false, 'Ask a group of colleagues or classmates if you can join their lunch or conversation.', 'They can say yes or no. Asking is normal.');
+
+  /* Band 6 */
+  add(6, 'looked', OUT, false, 'Wear something eye-catching, like a big badge or sunglasses indoors, for two hours while you’re out.', 'Your clothes affect nobody else.');
+  add(6, 'incompetent', ['cafe'], false, 'In a café, knock over your own glass of water, clean it up calmly, and stay to finish.', 'It’s your own water and you clean it up, so nobody else is put out.');
+  add(6, 'anxious', ['any'], false, 'Let a silence in a conversation last five seconds without filling it.', 'A pause asks nothing of the other person.');
+  add(6, 'refused', ['cafe'], true, 'Ask a café or restaurant if they’ll make something that isn’t on the menu.', 'They can say no. Kitchens get asked this a lot.');
+  add(6, 'laughed', ['work', 'shop', 'transport'], false, 'Call out the floor numbers in a lift with other people in it.', 'It’s silly and harmless. Albert Ellis used this one in 1968.');
+  add(6, 'inconvenience', ['cafe'], true, 'Ask to move to a different table in a café or restaurant after you’ve sat down.', 'Moving tables is a normal request.');
+  add(6, 'convention', ['transport'], false, 'Say “Good morning” to the people near you when you get on a bus or train.', 'A greeting asks nothing. People can ignore it.');
+  add(6, 'help', ['street'], true, 'Ask a stranger to recommend somewhere to eat nearby, and ask one follow-up question.', 'It’s a quick, friendly question they can answer or not.');
+  add(6, 'flaw', ['any'], false, 'Tell a colleague, classmate or friend about a mistake you made this week.', 'Mistakes are normal. Sharing one is honest.');
+  add(6, 'rejected', ['any'], false, 'Ask someone you’ve chatted with a few times (at the gym, a class, work) if they’d like a coffee sometime. Accept whatever they say.', 'Asking once, politely, and accepting the answer is respectful.');
+
+  /* Band 7 */
+  add(7, 'looked', ['street'], false, 'Walk slowly backwards along a busy pavement for one minute. Check behind you often.', 'It’s odd but harmless if you look where you’re going.');
+  add(7, 'incompetent', ['work'], false, 'Ask a question in a meeting, class or group that might sound basic.', 'Basic questions are often the ones others wanted to ask.');
+  add(7, 'anxious', ['street', 'cafe'], true, 'Tell a stranger you’re doing a confidence challenge, then ask them one simple question.', 'They can answer or walk on. Most people find it charming.');
+  add(7, 'refused', ['street'], true, 'Ask three strangers in a row if they have a spare pen. Keep going after a no.', 'A pen is a small ask, and each person can say no.');
+  add(7, 'laughed', ['street'], false, 'Do a five-second happy dance in a busy street, like you’ve just had good news.', 'It’s over in seconds and nobody has to react.');
+  add(7, 'inconvenience', ['shop'], true, 'In a busy shop, ask a member of staff to check the back for a size or colour.', 'Checking stock is part of their job.');
+  add(7, 'convention', ['street'], false, 'Read a short poem out loud, at normal volume, in a park or square where people are passing.', 'Passers-by can keep walking. Nobody is stuck listening.');
+  add(7, 'help', ['street', 'cafe'], true, 'Ask a stranger how to pronounce a local place name or word you’re unsure of.', 'It’s a quick question most people enjoy answering.');
+  add(7, 'flaw', ['any'], false, 'Show someone new something you’re working on that isn’t good yet.', 'Unfinished work is normal. They can be kind or say nothing.');
+  add(7, 'rejected', ['cafe', 'street'], true, 'Ask to join a group activity with people you don’t know, like a pub quiz team or a board game table.', 'Groups can say yes or no. Asking is normal.');
+
+  /* Band 8 */
+  add(8, 'looked', ['shop'], false, 'Wear a top inside out and misbuttoned in a busy shop, and make eye contact with three people.', 'Only you are affected. Eye contact asks nothing of anyone.');
+  add(8, 'incompetent', ['work'], false, 'Make one small deliberate slip in a group update (say the wrong day), then correct it calmly.', 'You correct it straight away, so nobody is misled.');
+  add(8, 'anxious', ['work'], false, 'At the start of a meeting or class, say: “I get nervous speaking up, so bear with me.”', 'It’s honest and asks for nothing but patience.');
+  add(8, 'refused', ['cafe'], true, 'Ask a café or bakery if you can try a sample of something they don’t usually offer samples of.', 'They can say no. It’s a friendly request.');
+  add(8, 'laughed', ['street'], false, 'Sing a whole chorus out loud while walking down a busy street.', 'Passers-by can keep walking. Nobody is stuck listening.');
+  add(8, 'inconvenience', ['transport'], true, 'On a bus or train, ask the person by the window if they’d mind swapping seats.', 'They can say no. It’s a polite, common request.');
+  add(8, 'convention', ['cafe', 'transport'], false, 'Stand up and stretch fully for 30 seconds in a quiet café or train carriage.', 'It’s harmless and over in half a minute.');
+  add(8, 'help', ['street'], true, 'Ask a stranger to hold your coffee or bag for a few seconds while you tie your shoe.', 'It takes seconds and they can say no.');
+  add(8, 'flaw', ['any'], false, 'Tell a friend or family member about something you’re insecure about.', 'Sharing with someone who cares about you is safe.');
+  add(8, 'rejected', ['any'], false, 'Suggest a plan to a group (where to eat, what to do) and make the case for it once if they say no.', 'Making your case once is normal. They can still say no.');
+
+  /* Band 9 */
+  add(9, 'looked', ['street'], false, 'Wear something truly eye-catching, like a costume piece or a wild hat, for an afternoon in town.', 'Your clothes affect nobody else.');
+  add(9, 'incompetent', ['any'], false, 'Go to a beginners’ class in something you’ve never tried (dance, climbing, a language) and stay to the end.', 'Beginners’ classes are full of people who can’t do it yet.');
+  add(9, 'anxious', ['work', 'any'], false, 'Give a two-minute talk to friends or colleagues about something you like. Say at the start that you’re nervous.', 'People listening to a friend are on their side.');
+  add(9, 'refused', ['cafe', 'shop'], true, 'Ask a café or shop if you can help out for ten minutes, like stacking chairs at closing time.', 'They can say no. You’re offering, not taking.');
+  add(9, 'laughed', ['cafe', 'shop'], true, 'Tell a joke to a small group of strangers, like people in a queue, and wait for the reaction.', 'They can laugh, smile or ignore it. All three are fine.');
+  add(9, 'inconvenience', ['cafe'], true, 'Go back to the counter twice in one visit with small requests, like napkins and then water.', 'Small requests are part of serving customers.');
+  add(9, 'convention', ['street'], true, 'Ask a busker if you can sing or clap along to one song with them.', 'Buskers can say no, and many like it.');
+  add(9, 'help', ['cafe'], true, 'Ask a small group of strangers to listen to 30 seconds of a toast or speech you’re practising, and ask what they think.', 'They can say no. Most people like being asked for an opinion.');
+  add(9, 'flaw', ['phone'], false, 'Share something you’ve made (a song, a drawing, some writing) publicly online under your own name.', 'You choose what to share. You can take it down later.');
+  add(9, 'rejected', ['any'], false, 'Ask someone you like on a date, or for a proper catch-up, clearly, in person or on the phone.', 'Asking once, clearly, and accepting the answer is respectful.');
+
+  /* Band 10 */
+  add(10, 'looked', ['street'], false, 'Sing or dance for one minute in a busy street, wearing something eye-catching.', 'Passers-by can keep walking. Nobody is stuck watching.');
+  add(10, 'incompetent', ['cafe'], false, 'Go to an open mic, karaoke or improv night and take a turn, however it goes.', 'Everyone there signed up to watch people have a go.');
+  add(10, 'anxious', ['any'], false, 'Give a short speech or toast at a gathering and let people see you’re nervous.', 'People at a gathering are on your side.');
+  add(10, 'refused', ['cafe', 'shop'], true, 'Ask a local business for something big and unusual, like a quick look round their kitchen.', 'They can say no. A polite ask harms nobody.');
+  add(10, 'laughed', ['cafe'], false, 'Do one minute of stand-up, or tell a funny story, at an open mic.', 'Everyone there signed up to watch people have a go.');
+  add(10, 'inconvenience', ['phone'], false, 'Organise something that asks people for their time (a walk, a dinner) and send the invite to a group.', 'People can say no. Being asked is usually welcome.');
+  add(10, 'convention', ['cafe'], false, 'Start a “Happy Birthday” for a friend in a café, loud enough for other tables to hear.', 'It’s over in a minute and other tables can join in or not.');
+  add(10, 'help', ['street', 'cafe'], true, 'Ask three strangers in a row for advice on a real decision (what to order, a haircut) and follow the majority.', 'Each person can say no. Most like giving an opinion.');
+  add(10, 'flaw', ['any'], false, 'Tell a group (friends, a class, a team) about something you’ve avoided out of embarrassment, and what you’re doing about it.', 'You choose what to share and who hears it.');
+  add(10, 'rejected', ['any'], false, 'Pitch something you care about (an idea, a project, yourself for a role) to someone who could say no.', 'A no to an idea is not a no to you.');
+
+  var level0 = {
+    yes: { text: 'Hum a tune out loud for ten seconds. Don’t explain it.', worry: 'Someone will look at me like I’m odd.' },
+    no: { text: 'Send a voice note to a friend that says only: “I’m doing a thing, I’ll tell you later.”', worry: 'My friend will think I’m being weird.' }
+  };
+
+  /* Mini-SPIN (Connor et al 2001). Check the licence before public launch. */
+  var miniSpin = {
+    stem: 'In the past week, how much has each of these bothered you?',
+    options: ['Not at all', 'A little bit', 'Somewhat', 'Very much', 'Extremely'],
+    items: [
+      'Fear of embarrassment causes me to avoid doing things or speaking to people.',
+      'I avoid activities in which I am the centre of attention.',
+      'Being embarrassed or looking stupid are among my worst fears.'
+    ],
+    cutoff: 6
+  };
+
+  /* PHQ-9 item 9 (free to use, no permission required) */
+  var phq9 = {
+    text: 'Over the last two weeks, how often have you been bothered by thoughts that you would be better off dead, or of hurting yourself in some way?',
+    options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
+  };
+
+  /* Brief Fear of Negative Evaluation, straightforward items (BFNE-S, from Leary 1983).
+     Stored as a baseline and never shown to the user as a number. */
+  var bfne = {
+    stem: 'How characteristic of you is each of these?',
+    options: ['Not at all', 'Slightly', 'Moderately', 'Very', 'Extremely'],
+    items: [
+      'I worry about what other people will think of me even when I know it doesn’t make any difference.',
+      'I am frequently afraid of other people noticing my shortcomings.',
+      'I am afraid others will not approve of me.',
+      'I am afraid that people will find fault with me.',
+      'When I am talking to someone, I worry about what they may be thinking about me.',
+      'I am usually worried about what kind of impression I make.',
+      'Sometimes I think I am too concerned with what other people think of me.',
+      'I often worry that I will say or do the wrong things.'
+    ]
+  };
+
+  return { themes: themes, settings: settings, items: items, level0: level0, miniSpin: miniSpin, phq9: phq9, bfne: bfne };
+})();
+
+</script>
+<script>
+/* Brave, first version (Sun 18th October 2026).
+   Everything runs in the browser. Progress is saved on this device only (localStorage).
+   No accounts, no analytics, no network requests. */
+(function () {
+  'use strict';
+
+  var B = window.BLUSH_BANK;
+  var KEY = 'blush.v1';
+  var THEME = {}, ITEM = {}, SETTING = {};
+  B.themes.forEach(function (t) { THEME[t.key] = t; });
+  B.items.forEach(function (i) { ITEM[i.id] = i; });
+  B.settings.forEach(function (s) { SETTING[s.key] = s; });
+
+  /* ---------- storage ---------- */
+  var storageOK = true;
+  function fresh() {
+    return {
+      v: 1, created: today(), accepted: false, safety: null, level0: null,
+      draft: {}, profile: null, bfne: [], levels: [], history: [], active: null,
+      activity: [], pauses: [], paused: null, points: 0, badges: [], flags: [],
+      testMode: false, summaryFor: null, finished: false
+    };
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      var s = JSON.parse(raw);
+      var base = fresh();
+      Object.keys(base).forEach(function (k) { if (!(k in s)) s[k] = base[k]; });
+      return s;
+    } catch (e) { storageOK = false; return null; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; }
+    catch (e) { storageOK = false; }
+  }
+
+  /* ---------- dates ---------- */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function dstr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function today() { return dstr(new Date()); }
+  function parseD(s) { var p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+  function addDays(s, n) { var d = parseD(s); d.setDate(d.getDate() + n); return dstr(d); }
+  function daysBetween(a, b) { return Math.round((parseD(b) - parseD(a)) / 86400000); }
+  function ordinal(n) { var s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+  function fmt(s) {
+    var d = parseD(s);
+    return d.toLocaleDateString('en-GB', { weekday: 'short' }) + ' ' + ordinal(d.getDate()) + ' ' + d.toLocaleDateString('en-GB', { month: 'long' });
+  }
+  function weekKey(s) { var d = parseD(s); var off = (d.getDay() + 6) % 7; d.setDate(d.getDate() - off); return dstr(d); }
+
+  /* ---------- helpers ---------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function avg(a) { return a.length ? Math.round(a.reduce(function (x, y) { return x + y; }, 0) / a.length) : null; }
+  function $(sel) { return document.querySelector(sel); }
+  function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function num(id, d) { var el = document.getElementById(id); return el ? Number(el.value) : d; }
+
+  /* ---------- streak ---------- */
+  function markActive() { var t = today(); if (S.activity.indexOf(t) < 0) S.activity.push(t); }
+  function pausedOn(s) {
+    if (S.paused && s >= S.paused) return true;
+    return S.pauses.some(function (p) { return s >= p.from && s <= p.to; });
+  }
+  function streakInfo() {
+    var t = today();
+    var used = {};
+    if (!S.activity.length) return { streak: 0, restLeft: 2 };
+    var act = {}; S.activity.forEach(function (d) { act[d] = 1; });
+    var first = S.activity.slice().sort()[0];
+    var d = act[t] ? t : addDays(t, -1);
+    var count = 0;
+    while (d >= first) {
+      if (act[d]) count++;
+      else if (pausedOn(d)) { /* paused days neither count nor break */ }
+      else {
+        var wk = weekKey(d);
+        if ((used[wk] || 0) < 2) used[wk] = (used[wk] || 0) + 1;
+        else break;
+      }
+      d = addDays(d, -1);
+    }
+    return { streak: count, restLeft: Math.max(0, 2 - (used[weekKey(t)] || 0)) };
+  }
+
+  /* ---------- badges ---------- */
+  var BADGES = [
+    { id: 'level0', name: 'Level 0', desc: 'Did the first one during sign-up' },
+    { id: 'level1', name: 'Started', desc: 'Finished level 1. The hard part.' },
+    { id: 'stillhere', name: 'Still here', desc: 'Something happened and you got through it' }
+  ];
+  for (var n = 2; n <= 9; n++) BADGES.push({ id: 'level' + n, name: 'Level ' + n, desc: 'Finished level ' + n });
+  BADGES.push({ id: 'level10', name: 'All 30', desc: 'Finished every level' });
+  function award(id) { if (S.badges.indexOf(id) < 0) S.badges.push(id); }
+
+  /* ---------- the ladder ---------- */
+  function curLevel() { for (var i = 0; i < S.levels.length; i++) if (!S.levels[i].done) return S.levels[i]; return null; }
+  function doneEntry(id) {
+    for (var i = 0; i < S.history.length; i++) {
+      var h = S.history[i];
+      if (h.itemId === id && h.status === 'done' && h.level !== 'encore') return h;
+    }
+    return null;
+  }
+  function entry(hid) { for (var i = 0; i < S.history.length; i++) if (S.history[i].hid === hid) return S.history[i]; return null; }
+  function nextItem(level) { for (var i = 0; i < level.items.length; i++) if (!doneEntry(level.items[i])) return level.items[i]; return null; }
+  function pendingDebrief() { for (var i = 0; i < S.history.length; i++) { var h = S.history[i]; if (h.status === 'done' && !h.outcome) return h; } return null; }
+  function doneToday() { var t = today(); return S.history.some(function (h) { return h.status === 'done' && h.date === t && h.level !== 'encore'; }); }
+  function levelComplete(l) { return l.items.every(function (id) { var e = doneEntry(id); return e && e.outcome; }); }
+  function doneCount() { return S.history.filter(function (h) { return h.status === 'done' && h.level !== 'encore'; }).length; }
+
+  function themeWeight(t) {
+    var base = S.profile ? S.profile.themes[t] : 50;
+    var preds = S.history.filter(function (h) { return h.theme === t && h.likelihood != null; }).slice(-2).map(function (h) { return h.likelihood; });
+    var recent = preds.length ? avg(preds) : base;
+    return (base + recent) / 2;
+  }
+  function eligible(it) {
+    var st = (S.profile && S.profile.settings) || [];
+    return it.settings.indexOf('any') >= 0 || it.settings.some(function (s) { return st.indexOf(s) >= 0; });
+  }
+  function usedIds() {
+    var u = {};
+    S.levels.forEach(function (l) { l.items.forEach(function (i) { u[i] = 1; }); });
+    S.history.forEach(function (h) { u[h.itemId] = 1; });
+    return u;
+  }
+  function wpick(ws) {
+    var tot = ws.reduce(function (a, b) { return a + b; }, 0), r = Math.random() * tot;
+    for (var i = 0; i < ws.length; i++) { r -= ws[i]; if (r <= 0) return i; }
+    return ws.length - 1;
+  }
+  /* Picks challenges from the bank: weighted towards the themes you rate highest,
+     varied across themes, filtered by places you can reach, never repeating. */
+  function pickItems(band, count, opts) {
+    opts = opts || {};
+    var used = usedIds(), flagged = {}; S.flags.forEach(function (f) { flagged[f] = 1; });
+    var avoid = opts.avoidThemes || [];
+    var tiers = opts.strictBand1
+      ? [function (it) { return it.band === 1 && eligible(it); }, function (it) { return it.band === 1; }]
+      : [
+        function (it) { return it.band === band && eligible(it); },
+        function (it) { return Math.abs(it.band - band) === 1 && eligible(it); },
+        function (it) { return it.band === band; },
+        function (it) { return Math.abs(it.band - band) <= 2; }
+      ];
+    var chosen = [], chosenThemes = {};
+    for (var t = 0; t < tiers.length && chosen.length < count; t++) {
+      var pool = B.items.filter(function (it) { return tiers[t](it) && !used[it.id] && !flagged[it.id] && chosen.indexOf(it) < 0; });
+      while (chosen.length < count && pool.length) {
+        var fresh = pool.filter(function (it) { return !chosenThemes[it.theme]; });
+        var src = fresh.length ? fresh : pool;
+        var ws = src.map(function (it) { return (20 + themeWeight(it.theme)) * (avoid.indexOf(it.theme) >= 0 ? 0.5 : 1); });
+        var pick = src[wpick(ws)];
+        chosen.push(pick); chosenThemes[pick.theme] = 1;
+        pool = pool.filter(function (x) { return x !== pick; });
+      }
+    }
+    return chosen.map(function (i) { return i.id; });
+  }
+  function buildLevel(n) {
+    var prev = S.levels[S.levels.length - 1];
+    var avoid = prev ? prev.items.map(function (id) { return ITEM[id].theme; }) : [];
+    S.levels.push({ n: n, items: pickItems(n, 3, { avoidThemes: avoid, strictBand1: n === 1 }), done: false, extraUsed: false });
+  }
+
+  /* ---------- state + routing ---------- */
+  var S = load() || fresh();
+  var route = { name: '', data: {} };
+  var hist = [], fwd = []; /* back and forward stacks */
+  var sosOpen = false;
+  var app = document.getElementById('app');
+
+  function homeRoute() {
+    if (!S.accepted) return ['welcome', {}];
+    if (!S.safety) return ['safety', {}];
+    if (S.safety.outcome === 'stop') return ['stop', {}];
+    if (daysBetween(S.safety.date, today()) >= 30) return ['safety', { recheck: true }];
+    if (!S.level0) return ['l0-ask', {}];
+    if (!S.profile) return ['p-themes', {}];
+    return ['today', {}];
+  }
+  /* Every move pushes the current screen so Back and Forward work like a browser.
+     fresh = true clears both stacks: used right after something is saved (a prediction,
+     a debrief, a swap) so Back can't take you into a step that's already done. */
+  function snap() { return { name: route.name, data: Object.assign({}, route.data) }; }
+  function show() { render(); var m = $('#main'); if (m) m.scrollTop = 0; }
+  function go(name, data, fresh) {
+    if (fresh) hist = [];
+    else if (route.name) { hist.push(snap()); if (hist.length > 60) hist.shift(); }
+    fwd = [];
+    route = { name: name, data: data || {} };
+    show();
+  }
+  function goHome() { var r = homeRoute(); go(r[0], r[1], true); }
+
+  /* ---------- small UI pieces ---------- */
+  /* extra: attributes added to every button, e.g. ' data-auto="1"' to move to the next slide on tap */
+  function choiceGroup(q, options, current, cls, extra) {
+    return '<div class="' + (cls || 'choices') + '" role="group">' + options.map(function (o, i) {
+      var v = o.v != null ? o.v : i;
+      return '<button type="button" class="choice" data-a="pick" data-q="' + q + '" data-v="' + esc(v) + '" aria-pressed="' + (current != null && String(current) === String(v)) + '"' + (extra || '') + '>' + esc(o.label != null ? o.label : o) + '</button>';
+    }).join('') + '</div>';
+  }
+  function meter(id, value, label, field) {
+    return '<div class="meter"><div class="meter-head"><span class="q-label">' + label + '</span><span class="meter-val" data-out="' + id + '">' + value + '%</span></div>' +
+      '<input type="range" id="' + id + '" min="0" max="100" step="5" value="' + value + '" aria-label="' + esc(label) + '"' + (field ? ' data-field="' + field + '"' : '') + '>' +
+      '<div class="meter-ends"><span>Won’t happen</span><span>Definitely will</span></div></div>';
+  }
+  /* Slide header: Back, label, "2/6", thin bar */
+  function progress(i, n, label) {
+    var pct = Math.round(((i + 1) / n) * 100);
+    return '<div class="prog"><div class="prog-row">' +
+      '<p class="eyebrow">' + esc(label || '') + '</p>' +
+      (n > 1 ? '<span class="small muted">' + (i + 1) + '/' + n + '</span>' : '') + '</div>' +
+      (n > 1 ? '<div class="bar thin"><i style="width:' + pct + '%"></i></div>' : '') + '</div>';
+  }
+  /* Typing slides lead with speaking: one tap opens the keyboard, then its microphone key.
+     Uses the phone's own dictation, so no microphone permission and nothing extra leaves the app. */
+  var MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/></svg>';
+  function speakBox(id, field, label, value, placeholder) {
+    return '<h2 class="question"><label for="' + id + '">' + label + '</label></h2>' +
+      '<button type="button" class="speak-btn" data-a="dictate" data-for="' + id + '">' + MIC +
+      '<span><b>Say it out loud</b><span class="small">Tap, then the mic on your keyboard. Speaking is practice too.</span></span></button>' +
+      '<textarea id="' + id + '" data-field="' + field + '" rows="2" placeholder="' + esc(placeholder || '') + '">' + esc(value || '') + '</textarea>';
+  }
+  function auto(done) { return ' data-auto="1"' + (done ? ' data-done="' + done + '"' : ''); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  var LIKELY = [{ v: 0, label: 'Very unlikely' }, { v: 25, label: 'Unlikely' }, { v: 50, label: 'Maybe' }, { v: 75, label: 'Likely' }, { v: 100, label: 'Very likely' }];
+  var YESNO = [{ v: 1, label: 'Yes' }, { v: 0, label: 'No' }];
+  var PCT = [{ v: 10, label: 'Very unlikely (10%)' }, { v: 30, label: 'Unlikely (30%)' }, { v: 50, label: 'Either way (50%)' }, { v: 70, label: 'Likely (70%)' }, { v: 90, label: 'Very likely (90%)' }];
+  var OUTCOMES = [{ v: 'no', label: 'No' }, { v: 'partly', label: 'Partly' }, { v: 'yes', label: 'Yes' }];
+  function placeTags(it) {
+    if (it.settings.indexOf('any') >= 0) return '<div class="tags"><span class="tag">Anywhere</span></div>';
+    return '<div class="tags">' + it.settings.map(function (s) { return '<span class="tag">' + esc(SETTING[s].label) + '</span>'; }).join('') + '</div>';
+  }
+  var RULE = '<div class="rule">No apologising, no explaining, no leaving early.</div>';
+  function card(text, cls) { return '<div class="card"><p class="' + (cls || 'challenge-text') + '">' + esc(text) + '</p></div>'; }
+  function ladderHTML(compact) {
+    var cur = curLevel();
+    var rows = [];
+    for (var n = 10; n >= 1; n--) {
+      var l = S.levels[n - 1];
+      var isCur = cur && cur.n === n;
+      if (compact && !isCur) continue;
+      var dots = '';
+      var ids = l ? l.items : [null, null, null];
+      ids.forEach(function (id) { dots += '<span class="dot' + (id && doneEntry(id) ? ' done' : '') + '"></span>'; });
+      var right = l && l.done ? '<span class="rung-tick">Done</span>' : '';
+      rows.push('<div class="rung' + (isCur ? ' current' : '') + (!l ? ' locked' : '') + '"><span class="rung-name">Level ' + n + '</span><div class="dots">' + dots + '</div>' + right + '</div>');
+    }
+    return '<div class="ladder">' + rows.join('') + '</div>';
+  }
+  function helpRow(name, num, tel) {
+    return '<div class="help-row"><span class="small">' + name + '</span><code>' +
+      (tel ? '<a href="tel:' + tel + '">' + esc(num) + '</a>' : esc(num)) + '</code>' +
+      '<button type="button" class="copy" data-a="copy" data-text="' + esc(num) + '">Copy</button></div>';
+  }
+  function helpLines() {
+    return '<p class="small"><b>In danger now? Call 999 (UK) or 911 (US).</b></p><div class="help-list">' +
+      helpRow('Samaritans, UK, free, 24/7', '116 123', '116123') +
+      helpRow('Shout, UK, text SHOUT to', '85258') +
+      helpRow('988 Lifeline, US, call or text', '988', '988') + '</div>' +
+      '<p class="small muted">Elsewhere: <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>. Real people, not this app.</p>';
+  }
+  var NOTICE = '<ul class="notes">' +
+    '<li>Self-guided practice. Not therapy, medical care or treatment, and no replacement for a professional.</li>' +
+    '<li>Some challenges will feel uncomfortable. You can stop any time.</li>' +
+    '<li>In crisis? Tap <b>SOS</b>, top right, on any screen.</li>' +
+    '<li>Your answers stay on this phone. No account, no ads, no tracking.</li></ul>';
+
+  /* ---------- screens ---------- */
+  var SCREENS = {};
+
+  SCREENS.welcome = function (d) {
+    if (!d.step) {
+      return '<p class="eyebrow">Confidence practice</p>' +
+        '<h1 class="hero">Get comfortable feeling awkward.</h1>' +
+        '<p class="lede">30 tiny real-world challenges, one a day. The first ones nobody will even notice.</p>' +
+        '<div class="actions"><button class="btn" data-a="next">Start</button></div>';
+    }
+    return progress(1, 1, 'Before you start') + '<h1>Four things to know</h1>' + NOTICE +
+      '<p class="small muted">Next: six quick safety questions. No scores shown.</p>' +
+      '<div class="actions"><button class="btn" data-a="accept">I’m 18 or over. Continue.</button></div>';
+  };
+
+  /* One question per slide; tapping an answer moves on */
+  var SAFETY_Q = [
+    { q: 's0', stem: B.miniSpin.stem, text: B.miniSpin.items[0], opts: B.miniSpin.options },
+    { q: 's1', stem: B.miniSpin.stem, text: B.miniSpin.items[1], opts: B.miniSpin.options },
+    { q: 's2', stem: B.miniSpin.stem, text: B.miniSpin.items[2], opts: B.miniSpin.options },
+    { q: 'phq', stem: 'Over the last two weeks, how often have you been bothered by:', text: 'Thoughts that you would be better off dead, or of hurting yourself in some way?', opts: B.phq9.options },
+    { q: 'bully', text: 'Are you being bullied, or living or working somewhere you feel unsafe?', opts: YESNO },
+    { q: 'psych', text: 'Have you been told you have psychosis or bipolar disorder, or been in hospital for your mental health in the last year?', opts: YESNO }
+  ];
+  SCREENS.safety = function (d) {
+    var a = d.ans || {}, i = d.step || 0, cur = SAFETY_Q[i], last = i === SAFETY_Q.length - 1;
+    return progress(i, SAFETY_Q.length, d.recheck ? 'Monthly check-in' : 'Safety check') +
+      (cur.stem ? '<p class="muted small">' + esc(cur.stem) + '</p>' : '') +
+      '<h2 class="question">' + esc(cur.text) + '</h2>' +
+      '<div class="actions">' + choiceGroup(cur.q, cur.opts, a[cur.q], 'choices', auto(last ? 'safety-submit' : '')) + '</div>';
+  };
+
+  SCREENS.stop = function () {
+    var s = S.safety || {};
+    var why = s.phq > 0 ? '<div class="warn small">You’ve had thoughts of harming yourself. Please talk to someone today.</div>' + helpLines()
+      : (s.bully ? '<div class="card small">If you feel unsafe, talk to someone you trust or your GP first.</div>' : '') +
+        (s.psych ? '<div class="card small">Please check with your GP or care team first.</div>' : '') +
+        '<p class="small muted">Tap SOS any time for free helplines.</p>';
+    return '<p class="eyebrow">Not right now</p><h1>Let’s not start today.</h1>' +
+      (s.phq > 0 ? '' : '<p class="lede">From your answers, now isn’t the right time. That’s not a judgement.</p>') + why +
+      '<div class="actions"><button class="btn secondary" data-a="safety-redo">I answered by mistake</button></div>';
+  };
+
+  SCREENS['safety-high'] = function () {
+    return '<p class="eyebrow">Before you start</p><h1>Do this alongside proper support.</h1>' +
+      '<p class="lede">Embarrassment gets in your way a lot. This is practice, not treatment.</p>' +
+      '<div class="card small"><p>CBT talking therapy has the best evidence. In England you can refer yourself.</p>' +
+      '<a class="linkbtn" href="https://www.nhs.uk/nhs-services/mental-health-services/find-nhs-talking-therapies-for-anxiety-and-depression/" target="_blank" rel="noopener">Find NHS Talking Therapies</a></div>' +
+      '<div class="actions"><button class="btn" data-a="after-safety">Continue</button></div>';
+  };
+
+  /* Level 0: the first challenge happens inside sign-up */
+  SCREENS['l0-ask'] = function () {
+    return '<p class="eyebrow">Level 0</p><h1>Let’s do one now.</h1>' +
+      '<p class="lede">It takes under a minute. Is anyone within earshot?</p>' +
+      '<div class="actions"><div class="row"><button class="btn" data-a="l0" data-v="yes">Yes</button><button class="btn" data-a="l0" data-v="no">No</button></div></div>';
+  };
+  SCREENS['l0-predict'] = function (d) {
+    var c = B.level0[d.which], i = d.step || 0;
+    if (i === 0) {
+      return progress(0, 2, 'Level 0') + card(c.text) +
+        speakBox('w0', 'worry', 'What do you think will happen?', d.worry, c.worry) +
+        '<div class="actions"><button class="btn" data-a="next">Next</button></div>';
+    }
+    return progress(1, 2, 'Level 0') + '<p class="muted">“' + esc(d.worry || c.worry) + '”</p>' +
+      '<h2 class="question">How likely does that feel?</h2>' +
+      '<div class="actions">' + choiceGroup('p', PCT, d.ans && d.ans.p, 'choices', auto('l0-go')) + '</div>';
+  };
+  SCREENS['l0-do'] = function (d) {
+    return '<p class="eyebrow">Level 0 · go</p>' + card(B.level0[d.which].text) + RULE +
+      '<div class="actions"><button class="btn" data-a="l0-done">Done</button></div>';
+  };
+  SCREENS['l0-outcome'] = function (d) {
+    return '<p class="eyebrow">Level 0</p><p class="muted">You predicted ' + d.p + '%: “' + esc(d.worry) + '”</p>' +
+      '<h2 class="question">Did it happen?</h2>' +
+      '<div class="actions">' + choiceGroup('o', OUTCOMES, null, 'choices', auto('l0-save')) + '</div>';
+  };
+  SCREENS['l0-done'] = function () {
+    var o = S.level0 || {};
+    var msg = o.outcome === 'no' ? 'You predicted ' + o.likelihood + '% and it didn’t happen. That gap is the point.' : 'Something happened. You’re still here. That’s the skill.';
+    return '<div class="celebrate"><div class="medal">0</div><h1>Level 0 done.</h1><p class="lede">' + msg + '</p>' +
+      '<p class="small muted">You’ve started. This one doesn’t count towards the 30.</p></div>' +
+      '<div class="actions"><button class="btn" data-a="go" data-to="p-themes">Set up my challenges</button></div>';
+  };
+
+  /* Questionnaire */
+  SCREENS['p-themes'] = function (d) {
+    var i = d.step || 0, t = B.themes[i], cur = (S.draft.themes || {})[t.key];
+    return progress(i, B.themes.length, 'What worries you') +
+      '<p class="muted small">When you put yourself out there, how likely does this feel?</p>' +
+      '<h2 class="question">' + esc(cap(t.fear)) + '</h2>' +
+      '<div class="actions">' + choiceGroup('th', LIKELY, cur, 'choices', auto(i === B.themes.length - 1 ? 'themes-next' : '')) + '</div>';
+  };
+  SCREENS['p-picture'] = function () {
+    return progress(0, 1, 'Picture it') +
+      speakBox('pic', 'picture', 'When you imagine embarrassing yourself, what do people do?', S.draft.picture, 'For example: they go quiet and stare') +
+      '<p class="small muted">Optional. Stays on this phone.</p>' +
+      '<div class="actions"><button class="btn" data-a="picture-next">Next</button></div>';
+  };
+  /* One place per slide, yes or no, so every tap moves on */
+  SCREENS['p-settings'] = function (d) {
+    var i = d.step || 0, s = B.settings[i], sel = S.draft.settings || [];
+    var cur = d.ans && d.ans['pl' + i] != null ? d.ans['pl' + i] : (S.draft.settingsAsked ? (sel.indexOf(s.key) >= 0 ? 1 : 0) : null);
+    return progress(i, B.settings.length, 'Your places') +
+      '<p class="muted small">In a normal week, do you go to:</p>' +
+      '<h2 class="question">' + esc(s.label) + '?</h2>' +
+      '<div class="actions">' + choiceGroup('pl' + i, YESNO, cur, 'choices', auto(i === B.settings.length - 1 ? 'settings-next' : '')) + '</div>';
+  };
+  function bfneForm(d, action, label) {
+    var a = d.ans || {}, i = d.step || 0;
+    return progress(i, B.bfne.items.length, label) +
+      '<p class="muted small">How much is this like you? No scores shown.</p>' +
+      '<h2 class="question">' + esc(B.bfne.items[i]) + '</h2>' +
+      '<div class="actions">' + choiceGroup('f' + i, B.bfne.options, a['f' + i], 'choices', auto(i === B.bfne.items.length - 1 ? action : '')) + '</div>';
+  }
+  SCREENS['p-bfne'] = function (d) { return bfneForm(d, 'profile-finish', 'Last bit'); };
+  SCREENS.bfne = function (d) { return bfneForm(d, 'bfne-save', 'Check-in'); };
+
+  SCREENS['ladder-ready'] = function () {
+    var l = S.levels[0];
+    return '<p class="eyebrow">Your ladder</p><h1>Level 1 is ready.</h1>' +
+      '<p class="lede">Three tiny ones, one a day. Nine bigger levels after.</p>' +
+      '<ul class="mini">' + l.items.map(function (id) { return '<li>' + esc(ITEM[id].text) + '</li>'; }).join('') + '</ul>' +
+      '<div class="actions"><button class="btn" data-a="go" data-to="today">Go to today</button></div>';
+  };
+
+  /* Today */
+  SCREENS.today = function () {
+    if (!S.levels.length) buildLevel(1);
+    var st = streakInfo();
+    var streakLine = '<p class="small muted">' + st.streak + '-day streak · ' + st.restLeft + ' rest day' + (st.restLeft === 1 ? '' : 's') + ' left this week</p>';
+    if (S.paused) {
+      return '<p class="eyebrow">Paused</p><h1>Taking a break.</h1><p class="lede">Your streak is safe. Come back when you’re ready.</p>' +
+        '<div class="actions"><button class="btn" data-a="resume">Resume</button></div>';
+    }
+    var pd = pendingDebrief();
+    if (pd) {
+      return '<p class="eyebrow">One thing first</p><h1>How did it go?</h1>' + card(ITEM[pd.itemId].text, '') +
+        '<div class="actions"><button class="btn" data-a="go" data-to="debrief" data-hid="' + pd.hid + '">Debrief (1 minute)</button></div>';
+    }
+    if (S.summaryFor) return SCREENS['level-summary']();
+    if (S.finished) return SCREENS.finished();
+    var lvl = curLevel();
+    if (!lvl) { buildLevel(S.levels.length + 1); save(); lvl = curLevel(); }
+    var k = lvl.items.filter(function (id) { return doneEntry(id); }).length;
+    var eb = '<p class="eyebrow">Level ' + lvl.n + ' · ' + (k + 1) + ' of ' + lvl.items.length + '</p>';
+    if (S.active && !S.active.encore) {
+      return eb + '<h1>Your challenge is waiting.</h1>' + card(ITEM[S.active.itemId].text) + streakLine +
+        '<div class="actions"><button class="btn" data-a="go" data-to="do">Back to it</button></div>';
+    }
+    if (!doneToday() || S.testMode) {
+      return eb + '<h1>Today’s challenge is ready.</h1><p class="muted">Open it when you could do it now.</p>' +
+        ladderHTML(true) + streakLine +
+        '<div class="actions"><button class="btn" data-a="go" data-to="reveal">Show me</button></div>';
+    }
+    return '<p class="eyebrow">Level ' + lvl.n + ' · ' + k + ' of ' + lvl.items.length + ' done</p><h1>Done for today.</h1>' +
+      '<p class="lede">Next one unlocks tomorrow.</p>' + ladderHTML(true) + streakLine;
+  };
+
+  SCREENS.reveal = function (d) {
+    var lvl = curLevel();
+    var id = d.itemId || (lvl && nextItem(lvl));
+    var it = ITEM[id];
+    if (!it) return '<h1>Nothing to show.</h1><div class="actions"><button class="btn" data-a="go" data-to="today">Back</button></div>';
+    var head = d.encore ? 'Encore' : 'Level ' + lvl.n + ' · ' + THEME[it.theme].label;
+    return (d.swapped ? '<div class="note small">Swapped. Here’s a different one.</div>' : '') +
+      '<p class="eyebrow">' + esc(head) + '</p>' +
+      '<div class="card"><p class="challenge-text">' + esc(it.text) + '</p>' + (d.encore ? '<p class="small muted">Try it somewhere new.</p>' : placeTags(it)) + '</div>' +
+      RULE + '<p class="small muted"><b>Why it’s safe:</b> ' + esc(it.why) + '</p>' +
+      '<div class="actions"><button class="btn" data-a="go" data-to="predict" data-item="' + id + '"' + (d.encore ? ' data-encore="1"' : '') + '>I’ll do it</button>' +
+      (d.encore ? '' : '<button class="btn ghost" data-a="go" data-to="skip" data-item="' + id + '">Swap this one</button>') + '</div>';
+  };
+
+  SCREENS.predict = function (d) {
+    var it = ITEM[d.itemId], i = d.step || 0;
+    var pic = S.profile && S.profile.picture;
+    var head = progress(i, 3, 'Before you do it');
+    if (i === 0) {
+      return head + speakBox('worry', 'worry', 'What are you most worried will happen?', d.worry, THEME[it.theme].worry) +
+        (pic ? '<button type="button" class="linkbtn small" data-a="use-pic">Use my words: “' + esc(pic.length > 40 ? pic.slice(0, 40) + '…' : pic) + '”</button>' : '') +
+        '<div class="actions"><button class="btn" data-a="next">Next</button></div>';
+    }
+    if (i === 1) {
+      return head + '<p class="muted">“' + esc(d.worry || THEME[it.theme].worry) + '”</p><h2 class="question">How likely does that feel?</h2>' +
+        '<div class="actions">' + choiceGroup('like', PCT, d.ans && d.ans.like, 'choices', auto()) + '</div>';
+    }
+    return head + '<h2 class="question">Could you stand it if it did happen?</h2>' +
+      '<div class="actions">' + choiceGroup('stand', [{ v: 'yes', label: 'Yes' }, { v: 'unsure', label: 'Not sure' }, { v: 'no', label: 'No' }], null, 'choices', auto('predict-save')) + '</div>';
+  };
+
+  SCREENS['do'] = function () {
+    var a = S.active;
+    if (!a) return SCREENS.today();
+    return '<p class="eyebrow">Go and do it</p>' + card(ITEM[a.itemId].text) + RULE +
+      '<p class="small muted">You predicted ' + a.likelihood + '%: “' + esc(a.worry) + '”</p>' +
+      '<div class="actions"><button class="btn" data-a="did-it">I did it</button>' +
+      '<button class="btn secondary" data-a="go" data-to="today">Later today</button>' +
+      '<div class="row">' + (a.encore ? '' : '<button class="btn ghost" data-a="go" data-to="skip" data-item="' + a.itemId + '">Swap it</button>') +
+      '<button class="btn ghost" data-a="went-badly">It went badly</button></div></div>';
+  };
+
+  SCREENS.debrief = function (d) {
+    var e = entry(d.hid), i = d.step || 0;
+    if (!e) return SCREENS.today();
+    var head = progress(i, 3, 'Debrief');
+    if (i === 0) {
+      return head + '<p class="muted">You predicted ' + e.likelihood + '%: “' + esc(e.worry) + '”</p>' +
+        '<h2 class="question">Did it happen?</h2>' +
+        '<div class="actions">' + choiceGroup('o', OUTCOMES, d.ans && d.ans.o, 'choices', auto()) +
+        '<div class="row"><button class="btn ghost" data-a="go" data-to="today">Later</button><button class="btn ghost" data-a="went-badly" data-hid="' + e.hid + '">It went badly</button></div></div>';
+    }
+    if (i === 1) {
+      return head + speakBox('know', 'know', 'How do you know?', d.know, 'What did people actually do?') +
+        '<div class="actions"><button class="btn" data-a="next">Next</button></div>';
+    }
+    return head + speakBox('learn', 'learn', 'What did you learn?', d.learn, 'For example: nobody cared much') +
+      '<div class="actions"><button class="btn" data-a="next" data-done="debrief-save">Save</button></div>';
+  };
+
+  SCREENS.result = function (d) {
+    var e = entry(d.hid);
+    if (!e) return SCREENS.today();
+    var pts = d.pts ? '<p class="small muted">+' + d.pts + ' points</p>' : '';
+    var next = '<div class="actions"><button class="btn" data-a="go" data-to="unreplay" data-hid="' + e.hid + '">Next</button></div>';
+    if (e.outcome === 'no') {
+      return '<p class="eyebrow">Result</p><h1>It didn’t happen.</h1><p class="lede">That gap is the whole point.</p>' +
+        '<div class="card gap"><div class="gap-row"><span>You predicted</span><span>' + e.likelihood + '%</span></div><div class="bar"><i style="width:' + e.likelihood + '%"></i></div>' +
+        '<div class="gap-row"><span>What happened</span><span>Nothing</span></div><div class="bar calm"><i style="width:2%"></i></div></div>' + pts + next;
+    }
+    return '<p class="eyebrow">Result</p><h1>Something happened. You’re still here.</h1><p class="lede">That’s the skill.</p>' + pts + next;
+  };
+
+  SCREENS.unreplay = function (d) {
+    var e = entry(d.hid);
+    if (!e) return SCREENS.today();
+    var facts = ['Expected: “' + esc(e.worry) + '” (' + e.likelihood + '%)',
+      'Happened: ' + (e.howKnow ? esc(e.howKnow) : (e.outcome === 'no' ? 'nothing' : e.outcome === 'partly' ? 'some of it' : 'it did, and you got through it')),
+      e.learned ? 'Learned: ' + esc(e.learned) : (e.outcome === 'no' ? 'The worry was bigger than reality.' : 'You did it anyway.')];
+    return '<p class="eyebrow">Close it</p><h1>Done. Don’t replay it.</h1><p class="muted">Keep these three things instead.</p>' +
+      '<ol class="facts">' + facts.map(function (f) { return '<li>' + f + '</li>'; }).join('') + '</ol>' +
+      '<div class="actions"><button class="btn" data-a="close-it">Close it</button></div>';
+  };
+
+  SCREENS.skip = function (d) {
+    var reasons = [
+      { v: 'not-possible', label: 'Can’t do it today' },
+      { v: 'too-much', label: 'Too much right now (get a smaller one)' },
+      { v: 'unsafe', label: 'Doesn’t feel safe (remove it)' },
+      { v: 'other', label: 'Something else' }
+    ];
+    return '<p class="eyebrow">Swap</p><h2 class="question">Why swap it?</h2>' +
+      '<div class="actions">' + choiceGroup('r', reasons, null, 'choices', auto('skip-save')) +
+      '<button class="btn ghost" data-a="go" data-to="today">Keep it</button></div>';
+  };
+
+  SCREENS.badly = function (d) {
+    return '<p class="eyebrow">Take a moment</p><h1>That sounds hard.</h1>' +
+      '<ol class="steps"><li>Find somewhere to sit for a minute.</li><li>Breathe out slowly, five times.</li><li>It’s over. Trying was the brave part.</li></ol>' +
+      '<p class="small muted">This one won’t come up again. Need someone now? Tap SOS.</p>' +
+      '<div class="actions">' + (d.hid ? '<button class="btn" data-a="go" data-to="debrief" data-hid="' + d.hid + '">Debrief when ready</button>' : '') +
+      '<button class="btn secondary" data-a="pause">Pause the programme</button>' +
+      '<button class="btn ghost" data-a="go" data-to="today">Back to today</button></div>';
+  };
+
+  SCREENS['level-summary'] = function () {
+    var n = S.summaryFor;
+    var lvl = S.levels[n - 1];
+    var mine = S.history.filter(function (h) { return h.level === n && h.status === 'done'; });
+    var thisAvg = avg(mine.map(function (h) { return h.likelihood; }));
+    var l1 = avg(S.history.filter(function (h) { return h.level === 1 && h.status === 'done'; }).map(function (h) { return h.likelihood; }));
+    var tally = { no: 0, partly: 0, yes: 0 };
+    mine.forEach(function (h) { if (tally[h.outcome] != null) tally[h.outcome]++; });
+    var trend = '';
+    if (n > 1 && l1 != null) trend = thisAvg < l1 - 5 ? 'Your predictions are dropping.' : thisAvg > l1 + 5 ? 'Bigger challenges, higher predictions. Normal.' : 'Same predictions, bigger challenges.';
+    var check = '';
+    if (n === 5 || n === 10) {
+      var got = S.bfne.filter(function (b) { return b.level === n; })[0];
+      if (!got) check = '<button class="btn secondary" data-a="go" data-to="bfne" data-level="' + n + '">Quick check-in (8 taps)</button>';
+      else {
+        var diff = got.total - S.bfne[0].total;
+        check = '<div class="note small">Worry about being judged: ' + (diff <= -3 ? 'lower than' : diff >= 3 ? 'higher than' : 'about the same as') + ' when you started.</div>';
+      }
+    }
+    var offerExtra = n < 10 && thisAvg >= 50 && !lvl.extraUsed;
+    return '<div class="celebrate"><div class="medal">' + n + '</div><h1>Level ' + n + ' done.</h1>' +
+      (n === 1 ? '<p class="lede">You’ve started. That was the hard part.</p>' : (trend ? '<p class="muted">' + trend + '</p>' : '')) + '</div>' +
+      '<div class="stats"><div class="stat"><b>' + thisAvg + '%</b><span>Avg prediction</span></div>' +
+      '<div class="stat"><b>' + tally.no + '</b><span>Didn’t happen</span></div>' +
+      '<div class="stat"><b>' + (tally.partly + tally.yes) + '</b><span>Got through it</span></div></div>' +
+      (check.indexOf('note') >= 0 ? check : '') +
+      '<div class="actions">' + (check.indexOf('btn') >= 0 ? check : '') +
+      (offerExtra ? '<button class="btn secondary" data-a="extra">One more at this size</button>' : '') +
+      '<button class="btn" data-a="level-next">' + (n === 10 ? 'Finish' : 'Move up to level ' + (n + 1)) + '</button></div>';
+  };
+
+  SCREENS.finished = function () {
+    return '<div class="celebrate"><div class="medal">30</div><h1>All 30 done.</h1><p class="lede">Every one was a worry tested in real life.</p></div>' +
+      '<p class="muted small">Encore: repeat an old one somewhere new. It helps the change stick.</p>' +
+      '<div class="actions"><button class="btn" data-a="encore">Give me an encore</button>' +
+      '<button class="btn secondary" data-a="go" data-to="share">Share a summary</button></div>';
+  };
+
+  /* Progress, Settings and Share are lists that can grow, so they scroll on purpose */
+  SCREENS.progress = function () {
+    var st = streakInfo();
+    var done = S.history.filter(function (h) { return h.status === 'done' && h.likelihood != null; });
+    var chart = '';
+    if (done.length) {
+      var w = 300, h = 110, n = Math.max(done.length, 10), bw = w / n;
+      var bars = done.map(function (e, i) {
+        var bh = Math.max(2, e.likelihood * (h - 10) / 100);
+        var c = !e.outcome ? 'var(--line)' : e.outcome === 'no' ? 'var(--calm)' : 'var(--blush)';
+        return '<rect x="' + (i * bw + 2).toFixed(1) + '" y="' + (h - bh).toFixed(1) + '" width="' + (bw - 4).toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3" style="fill:' + c + '"></rect>';
+      }).join('');
+      chart = '<div class="card"><h2>Your predictions</h2><p class="small muted">Green: didn’t happen. Pink: happened, you got through it.</p>' +
+        '<svg class="chart" viewBox="0 0 300 112" preserveAspectRatio="none" role="img" aria-label="Prediction per challenge"><line x1="0" y1="111" x2="300" y2="111" style="stroke:var(--line)"></line>' + bars + '</svg></div>';
+    }
+    var hist = S.history.slice().reverse().map(function (e) {
+      var label = e.status === 'skipped' ? 'Swapped' : !e.outcome ? 'Debrief to do' : e.outcome === 'no' ? 'Didn’t happen' : e.outcome === 'partly' ? 'Partly happened' : 'Happened';
+      var cls = e.status === 'skipped' ? 'skipped' : (e.outcome || 'skipped');
+      return '<div class="hist-item"><span class="small muted">' + fmt(e.date) + ' · ' + (e.level === 'encore' ? 'Encore' : 'Level ' + e.level) + (e.likelihood != null ? ' · predicted ' + e.likelihood + '%' : '') + '</span>' +
+        '<span>' + esc(ITEM[e.itemId].text) + '</span><span><span class="pill ' + cls + '">' + label + '</span></span></div>';
+    }).join('');
+    return '<p class="eyebrow">Progress</p><h1>Your ladder</h1>' +
+      '<div class="stats"><div class="stat"><b>' + doneCount() + '</b><span>of 30 done</span></div><div class="stat"><b>' + st.streak + '</b><span>day streak</span></div><div class="stat"><b>' + S.points + '</b><span>points</span></div></div>' +
+      ladderHTML(false) + chart +
+      '<h2>Badges</h2><div class="badges">' + BADGES.map(function (b) {
+        return '<div class="badge' + (S.badges.indexOf(b.id) >= 0 ? ' got' : '') + '"><b>' + esc(b.name) + '</b><span class="small muted">' + esc(b.desc) + '</span></div>';
+      }).join('') + '</div>' +
+      (hist ? '<h2>History</h2><div class="card hist">' + hist + '</div>' : '') +
+      '<button class="btn" data-a="go" data-to="mylist">See and copy my challenges</button>' +
+      '<button class="btn secondary" data-a="go" data-to="share">Share a summary</button><div style="height:8px"></div>';
+  };
+
+  function shareText() {
+    var done = S.history.filter(function (h) { return h.status === 'done' && h.outcome; });
+    var skipped = S.history.filter(function (h) { return h.status === 'skipped'; }).length;
+    var start = S.activity.slice().sort()[0] || today();
+    var lvl = curLevel();
+    var out = ['Confidence practice summary', fmt(start) + ' to ' + fmt(today()), '',
+      'Challenges done: ' + doneCount() + ' of 30',
+      'Level reached: ' + (S.finished ? 'all 10 levels' : (lvl ? lvl.n : 1)),
+      'Challenges swapped: ' + skipped, '',
+      'Each challenge, with what I predicted and what happened:', ''];
+    done.forEach(function (e) {
+      out.push(fmt(e.date) + ' · ' + (e.level === 'encore' ? 'Encore' : 'Level ' + e.level));
+      out.push('Challenge: ' + ITEM[e.itemId].text);
+      out.push('I predicted: “' + e.worry + '” (' + e.likelihood + '% likely)');
+      out.push('What happened: ' + (e.outcome === 'no' ? 'It didn’t happen.' : e.outcome === 'partly' ? 'It partly happened.' : 'It happened.'));
+      if (e.howKnow) out.push('How I know: ' + e.howKnow);
+      if (e.learned) out.push('What I learned: ' + e.learned);
+      out.push('');
+    });
+    return out.join('\n');
+  }
+  /* Every challenge picked for you so far, as plain text to copy out (for a Notion page, notes, a coach) */
+  function challengesText() {
+    var out = ['Brave: my challenges', 'Copied ' + fmt(today()), ''];
+    S.levels.forEach(function (l) {
+      out.push('Level ' + l.n + (l.done ? ' (done)' : ''));
+      l.items.forEach(function (id, i) {
+        var it = ITEM[id], e = doneEntry(id);
+        var status = e ? (e.outcome ? 'Done ' + fmt(e.date) : 'Done, debrief to do') : (id === nextItem(l) && !l.done ? 'Next' : 'Coming up');
+        out.push((i + 1) + '. ' + it.text);
+        out.push('   Status: ' + status + ' · Fear: ' + THEME[it.theme].label + ' · Where: ' + (it.settings.indexOf('any') >= 0 ? 'Anywhere' : it.settings.map(function (s) { return SETTING[s].label; }).join(', ')));
+        if (e) {
+          out.push('   Predicted ' + e.likelihood + '%: “' + e.worry + '”' + (e.outcome ? ' · Happened: ' + (e.outcome === 'no' ? 'no' : e.outcome) : ''));
+          if (e.howKnow) out.push('   How I know: ' + e.howKnow);
+          if (e.learned) out.push('   Learned: ' + e.learned);
+        }
+      });
+      var swapped = S.history.filter(function (h) { return h.status === 'skipped' && h.level === l.n; });
+      swapped.forEach(function (h) { out.push('   Swapped out: ' + ITEM[h.itemId].text + ' (' + h.skipReason + ')'); });
+      out.push('');
+    });
+    var next = S.levels.length + 1;
+    if (next <= 10) out.push('Levels ' + next + ' to 10: not picked yet. Each level is chosen when you reach it, from your answers and predictions so far.');
+    return out.join('\n');
+  }
+  SCREENS.mylist = function () {
+    return '<p class="eyebrow">Your challenges</p><h1>Everything picked so far</h1>' +
+      '<p class="muted small">Copy this and paste it wherever you keep notes. Later levels are picked as you reach them.</p>' +
+      '<textarea id="mylist" class="share-text" readonly>' + esc(challengesText()) + '</textarea>' +
+      '<div class="actions"><button class="btn" data-a="copy-list">Copy my challenges</button></div>';
+  };
+  SCREENS.share = function () {
+    return '<p class="eyebrow">Share</p><h1>One-page summary</h1>' +
+      '<p class="muted small">For a counsellor, coach or GP. Challenges, predictions and what happened. No scores.</p>' +
+      '<textarea id="share" class="share-text" readonly>' + esc(shareText()) + '</textarea>' +
+      '<div class="actions"><button class="btn" data-a="copy-share">Copy summary</button><button class="btn ghost" data-a="go" data-to="progress">Back</button></div>';
+  };
+
+  SCREENS.settings = function (d) {
+    return '<p class="eyebrow">Settings</p><h1>Settings</h1>' +
+      '<div class="card" style="gap:0;padding-block:4px">' +
+      '<div class="setting-row"><div><b>Pause</b><p class="small muted">Your streak is kept.</p></div><button class="toggle" data-a="' + (S.paused ? 'resume' : 'pause') + '" aria-pressed="' + (!!S.paused) + '" aria-label="Pause the programme"></button></div>' +
+      '<div class="setting-row"><div><b>Testing mode</b><p class="small muted">Next challenge unlocks straight away.</p></div><button class="toggle" data-a="test-mode" aria-pressed="' + S.testMode + '" aria-label="Testing mode"></button></div>' +
+      '<div class="setting-row"><div><b>Safety check</b><p class="small muted">Last done ' + (S.safety ? fmt(S.safety.date) : 'never') + '. Repeats monthly.</p></div><button class="copy" data-a="safety-redo">Redo</button></div>' +
+      '<div class="setting-row"><div><b>Share a summary</b><p class="small muted">One page to copy and send.</p></div><button class="copy" data-a="go" data-to="share">Open</button></div>' +
+      '</div>' +
+      '<div class="card small"><h2>About</h2>' + NOTICE +
+      '<p><b>Where the method comes from</b></p><ul class="steps">' +
+      '<li><a href="https://cdn.vanderbilt.edu/t2-main/lab-prd/wp-content/uploads/sites/244/2026/01/Inhibitory-Learning-Exposure-1.pdf" target="_blank" rel="noopener">Craske and others, 2014</a>: test a prediction, check what happened.</li>' +
+      '<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4238930" target="_blank" rel="noopener">Fang and others, 2013</a>: small deliberate social mishaps.</li>' +
+      '<li><a href="https://www.nice.org.uk/guidance/cg159/chapter/Recommendations" target="_blank" rel="noopener">NICE guidance CG159</a>: self-help, and when to get more support.</li></ul></div>' +
+      '<div class="card"><h2>Delete everything</h2><p class="small muted">Removes all your answers from this phone, for good.</p>' +
+      (d.confirmDel ? '<button class="btn danger" data-a="delete-all">Tap again to delete</button>' : '<button class="btn secondary" data-a="delete-ask">Delete everything</button>') + '</div>' +
+      '<div style="height:8px"></div>';
+  };
+
+  /* ---------- shell ---------- */
+  var ICON = {
+    today: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 2v20M17 2v20M7 6h10M7 11h10M7 16h10"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>'
+  };
+  function tabs() {
+    var cur = route.name === 'finished' ? 'today' : route.name;
+    return '<nav class="tabs">' + [['today', 'Today'], ['progress', 'Progress'], ['settings', 'Settings']].map(function (t) {
+      return '<button class="tab" data-a="go" data-to="' + t[0] + '"' + (cur === t[0] ? ' aria-current="page"' : '') + '>' + ICON[t[0]] + t[1] + '</button>';
+    }).join('') + '</nav>';
+  }
+  function sheet() {
+    return '<div class="sheet-wrap" data-a="sos-close"><div class="sheet" role="dialog" aria-label="Get help now" data-stop="1">' +
+      '<h2>Need someone to talk to?</h2>' + helpLines() +
+      (S.profile ? '<button class="btn secondary" data-a="pause">Pause the programme</button>' : '') +
+      '<button class="btn" data-a="sos-close">Close</button></div></div>';
+  }
+  var SCROLLS = ['progress', 'settings', 'share', 'mylist'];
+  var CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  var CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+  function render() {
+    var scr = SCREENS[route.name] || SCREENS.today;
+    var body = scr(route.data);
+    var showTabs = ['today', 'progress', 'settings', 'finished'].indexOf(route.name) >= 0 && S.profile;
+    var st = S.profile ? streakInfo() : null;
+    app.innerHTML =
+      '<header class="top"><div class="navbtns">' +
+      '<button type="button" class="nav" data-a="back" aria-label="Back"' + (hist.length ? '' : ' disabled') + '>' + CHEV_L + '</button>' +
+      '<button type="button" class="nav" data-a="fwd" aria-label="Forward"' + (fwd.length ? '' : ' disabled') + '>' + CHEV_R + '</button></div>' +
+      '<div class="brand">Brave<span>.</span></div>' +
+      (st ? '<div class="chip-stat">' + st.streak + '-day streak</div>' : '') +
+      '<button class="sos-btn" data-a="sos" aria-label="Get help now">SOS</button></header>' +
+      '<main id="main">' + (storageOK ? '' : '<p class="banner">This browser isn’t saving your progress (perhaps a private window). You can try it, but it will reset when you close it.</p>') +
+      '<div class="screen' + (SCROLLS.indexOf(route.name) >= 0 ? ' scrolls' : '') + '">' + body + '</div></main>' +
+      (showTabs ? tabs() : '') + (sosOpen ? sheet() : '');
+    refreshNeed();
+  }
+  function refreshNeed() {
+    var ans = route.data.ans || {};
+    document.querySelectorAll('[data-need]').forEach(function (b) {
+      var ok = b.getAttribute('data-need').split(',').every(function (k) { return ans[k] != null; });
+      b.disabled = !ok;
+    });
+  }
+
+  /* ---------- actions ---------- */
+  var A = {};
+  A.go = function (el) {
+    var data = {};
+    if (el.dataset.hid) data.hid = el.dataset.hid;
+    if (el.dataset.item) data.itemId = el.dataset.item;
+    if (el.dataset.encore) data.encore = true;
+    if (el.dataset.level) data.level = Number(el.dataset.level);
+    go(el.dataset.to, data);
+  };
+  /* Tapping an answer saves it and moves to the next slide (or runs the slide's finish action) */
+  var advancing = false;
+  A.pick = function (el) {
+    if (advancing) return;
+    var q = el.dataset.q, v = el.dataset.v;
+    var value = isNaN(Number(v)) ? v : Number(v);
+    route.data.ans = route.data.ans || {};
+    route.data.ans[q] = value;
+    if (q === 'th') { S.draft.themes = S.draft.themes || {}; S.draft.themes[B.themes[route.data.step || 0].key] = value; save(); }
+    document.querySelectorAll('[data-a="pick"][data-q="' + q + '"]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); });
+    refreshNeed();
+    if (el.dataset.auto) {
+      advancing = true;
+      setTimeout(function () {
+        advancing = false;
+        if (el.dataset.done) A[el.dataset.done](el); else setStep((route.data.step || 0) + 1);
+      }, 160);
+    }
+  };
+  function collect() {
+    document.querySelectorAll('[data-field]').forEach(function (f) { route.data[f.dataset.field] = f.type === 'range' ? Number(f.value) : f.value.trim(); });
+  }
+  function setStep(n) {
+    hist.push(snap()); fwd = [];
+    route = { name: route.name, data: Object.assign({}, route.data, { step: Math.max(0, n) }) };
+    show();
+  }
+  A.back = function () { if (!hist.length) return; collect(); fwd.push(snap()); route = hist.pop(); show(); };
+  A.fwd = function () { if (!fwd.length) return; collect(); hist.push(snap()); route = fwd.pop(); show(); };
+  A.next = function (el) { collect(); if (el.dataset.done) A[el.dataset.done](el); else setStep((route.data.step || 0) + 1); };
+  A.accept = function () { S.accepted = true; S.acceptedAt = today(); save(); go('safety', {}, true); };
+  A['safety-submit'] = function () {
+    var a = route.data.ans;
+    var spin = [a.s0, a.s1, a.s2];
+    var total = spin[0] + spin[1] + spin[2];
+    var stop = a.phq > 0 || a.bully === 1 || a.psych === 1;
+    S.safety = { date: today(), spin: spin, spinTotal: total, phq: a.phq, bully: a.bully === 1, psych: a.psych === 1, outcome: stop ? 'stop' : total >= B.miniSpin.cutoff ? 'high' : 'ok' };
+    save();
+    if (stop) go('stop', {}, true);
+    else if (total >= B.miniSpin.cutoff) go('safety-high', {}, true);
+    else A['after-safety']();
+  };
+  A['safety-redo'] = function () { go('safety', { recheck: !!S.profile }); };
+  A['after-safety'] = function () { goHome(); };
+
+  A.l0 = function (el) { go('l0-predict', { which: el.dataset.v }); };
+  A['l0-go'] = function () { var d = route.data; go('l0-do', { which: d.which, worry: d.worry || B.level0[d.which].worry, p: d.ans.p }); };
+  /* Focus inside the tap itself, so phones open the keyboard (and its microphone key) straight away */
+  A.dictate = function (el) {
+    var t = document.getElementById(el.dataset.for);
+    if (!t) return;
+    t.focus();
+    try { t.setSelectionRange(t.value.length, t.value.length); } catch (e) { /* not all inputs support it */ }
+  };
+  A['l0-done'] = function () { go('l0-outcome', route.data); };
+  A['l0-save'] = function () {
+    var d = route.data;
+    S.level0 = { date: today(), which: d.which, worry: d.worry, likelihood: d.p, outcome: d.ans.o };
+    award('level0'); S.points += 10; markActive(); save();
+    go('l0-done', {}, true);
+  };
+
+  A['themes-next'] = function () {
+    var t = S.draft.themes || {};
+    B.themes.forEach(function (th) { if (t[th.key] == null) t[th.key] = 50; });
+    S.draft.themes = t; save(); go('p-picture');
+  };
+  A['picture-next'] = function () { S.draft.picture = val('pic'); save(); go('p-settings'); };
+  A['settings-next'] = function () {
+    var a = route.data.ans || {}, prev = S.draft.settings || [];
+    S.draft.settings = B.settings.filter(function (s, i) {
+      return a['pl' + i] != null ? a['pl' + i] === 1 : prev.indexOf(s.key) >= 0;
+    }).map(function (s) { return s.key; });
+    S.draft.settingsAsked = true;
+    save(); go('p-bfne');
+  };
+  function bfneTotal(a) { var t = 0; for (var i = 0; i < 8; i++) t += a['f' + i] + 1; return t; }
+  function bfneAnswers(a) { var r = []; for (var i = 0; i < 8; i++) r.push(a['f' + i] + 1); return r; }
+  A['profile-finish'] = function () {
+    var a = route.data.ans;
+    S.profile = { themes: S.draft.themes || {}, picture: S.draft.picture || '', settings: S.draft.settings || [], date: today() };
+    S.bfne.push({ date: today(), level: 0, answers: bfneAnswers(a), total: bfneTotal(a) });
+    S.draft = {};
+    if (!S.levels.length) buildLevel(1);
+    save(); go('ladder-ready', {}, true);
+  };
+  A['bfne-save'] = function () {
+    var a = route.data.ans;
+    S.bfne.push({ date: today(), level: route.data.level, answers: bfneAnswers(a), total: bfneTotal(a) });
+    save(); go('today', {}, true);
+  };
+
+  A['use-pic'] = function () { var t = document.getElementById('worry'); if (t && S.profile) t.value = S.profile.picture; };
+  A['predict-save'] = function () {
+    var d = route.data, a = d.ans || {}, lvl = curLevel(), id = d.itemId;
+    S.active = { itemId: id, worry: d.worry || THEME[ITEM[id].theme].worry, likelihood: a.like != null ? a.like : 50, couldStand: a.stand || null, at: today(), encore: !!d.encore, level: d.encore ? 'encore' : (lvl ? lvl.n : 1) };
+    markActive(); save(); go('do', {}, true);
+  };
+  function recordDone(wentBadly) {
+    var a = S.active, it = ITEM[a.itemId];
+    var e = { hid: 'h' + Date.now().toString(36), itemId: a.itemId, theme: it.theme, band: it.band, level: a.level, date: today(), worry: a.worry, likelihood: a.likelihood, couldStand: a.couldStand, status: 'done', outcome: null, howKnow: '', learned: '', wentBadly: !!wentBadly };
+    S.history.push(e); S.active = null; S.points += 10; markActive();
+    return e;
+  }
+  A['did-it'] = function () { if (!S.active) return go('today'); var e = recordDone(false); save(); go('debrief', { hid: e.hid }, true); };
+  A['went-badly'] = function (el) {
+    var e = el.dataset.hid ? entry(el.dataset.hid) : (S.active ? recordDone(true) : null);
+    if (e) { e.wentBadly = true; if (S.flags.indexOf(e.itemId) < 0) S.flags.push(e.itemId); }
+    save(); go('badly', { hid: e ? e.hid : null }, true);
+  };
+  A['debrief-save'] = function () {
+    var d = route.data, e = entry(d.hid), o = d.ans.o;
+    e.outcome = o; e.howKnow = d.know || ''; e.learned = d.learn || ''; e.debriefedAt = today();
+    var pts = 5 + (o !== 'no' ? 5 : 0);
+    S.points += pts;
+    if (o !== 'no') award('stillhere');
+    markActive(); save();
+    go('result', { hid: e.hid, pts: pts + 10 }, true);
+  };
+  A['close-it'] = function () {
+    var lvl = curLevel();
+    if (lvl && levelComplete(lvl)) {
+      lvl.done = true; lvl.completedAt = today();
+      award('level' + lvl.n);
+      S.summaryFor = lvl.n;
+      if (lvl.n === 10) S.finished = true;
+      save(); go('level-summary', {}, true);
+    } else go('today', {}, true);
+  };
+  A.extra = function () {
+    var n = S.summaryFor, lvl = S.levels[n - 1];
+    var ids = pickItems(n, 1, { avoidThemes: lvl.items.map(function (id) { return ITEM[id].theme; }) });
+    if (ids.length) { lvl.items.push(ids[0]); lvl.done = false; lvl.extraUsed = true; }
+    S.summaryFor = null; save(); go('today', {}, true);
+  };
+  A['level-next'] = function () {
+    var n = S.summaryFor;
+    S.summaryFor = null;
+    if (n < 10 && !S.levels[n]) buildLevel(n + 1);
+    save(); go('today', {}, true);
+  };
+  A['skip-save'] = function () {
+    var id = route.data.itemId, it = ITEM[id], reason = route.data.ans.r;
+    var lvl = curLevel();
+    S.history.push({ hid: 'h' + Date.now().toString(36), itemId: id, theme: it.theme, band: it.band, level: lvl ? lvl.n : 1, date: today(), status: 'skipped', skipReason: reason });
+    if (reason === 'unsafe' && S.flags.indexOf(id) < 0) S.flags.push(id);
+    if (S.active && S.active.itemId === id) S.active = null;
+    var band = reason === 'too-much' ? Math.max(1, it.band - 1) : it.band;
+    var others = lvl ? lvl.items.filter(function (x) { return x !== id; }).map(function (x) { return ITEM[x].theme; }) : [];
+    var rep = pickItems(band, 1, { avoidThemes: others.concat([it.theme]) })[0];
+    if (lvl && rep) { lvl.items[lvl.items.indexOf(id)] = rep; }
+    save();
+    if (rep) go('reveal', { itemId: rep, swapped: true }, true); else go('today', {}, true);
+  };
+  A.encore = function () {
+    var done = S.history.filter(function (h) { return h.status === 'done' && h.level !== 'encore' && !h.wentBadly; });
+    if (!done.length) return;
+    var pick = done[Math.floor(Math.random() * done.length)];
+    go('reveal', { itemId: pick.itemId, encore: true });
+  };
+  A.pause = function () { if (!S.paused) S.paused = today(); sosOpen = false; save(); go('today', {}, true); };
+  A.resume = function () {
+    if (S.paused) { var to = addDays(today(), -1); if (to >= S.paused) S.pauses.push({ from: S.paused, to: to }); S.paused = null; }
+    save(); if (route.name === 'settings') render(); else go('today', {}, true);
+  };
+  A['test-mode'] = function () { S.testMode = !S.testMode; save(); render(); };
+  A['delete-ask'] = function () { route.data.confirmDel = true; render(); };
+  A['delete-all'] = function () {
+    try { localStorage.removeItem(KEY); } catch (e) { /* nothing to remove */ }
+    S = fresh(); go('welcome', {}, true);
+  };
+  A.sos = function () { sosOpen = true; render(); };
+  A['sos-close'] = function (el, ev) { if (ev && ev.target.closest('[data-stop]') && el.classList.contains('sheet-wrap')) return; sosOpen = false; render(); };
+  function copyText(text, btn, fallbackEl) {
+    var done = function () { var o = btn.textContent; btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = o; }, 1500); };
+    var fail = function () { if (fallbackEl) { fallbackEl.focus(); fallbackEl.select(); } btn.textContent = 'Select and copy'; };
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+  A.copy = function (el) { copyText(el.dataset.text, el, null); };
+  A['copy-list'] = function (el) { var t = document.getElementById('mylist'); copyText(t.value, el, t); };
+  A['copy-share'] = function (el) { var t = document.getElementById('share'); copyText(t.value, el, t); };
+
+  document.addEventListener('click', function (ev) {
+    var el = ev.target.closest('[data-a]');
+    if (!el) return;
+    if (el.classList.contains('sheet-wrap') && ev.target.closest('.sheet')) return;
+    var fn = A[el.dataset.a];
+    if (fn) { ev.preventDefault(); fn(el, ev); }
+  });
+  document.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (t.type === 'range') { var o = document.querySelector('[data-out="' + t.id + '"]'); if (o) o.textContent = t.value + '%'; }
+  });
+
+  goHome();
+})();
+
+</script>
+</body>
+</html>
